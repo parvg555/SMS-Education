@@ -7,6 +7,18 @@
     <title>Document</title>
 </head>
 <body>
-    <a href="{% url 'logout' %}">logout</a>
+    <a href="{% url 'logout' %}">logout</a><br>
+    <a href="{% url 'addclass' %}">add class</a><br>
+
+    <h1>classes</h1>
+    {% for class in classes %}
+        <a href="{% url 'classroom' class.id %}">
+            <div>
+                <h3>Name: {{class.name}}</h3>
+                <h3>Subject: {{class.subject}}</h3>
+            </div>
+        </a>
+        <br>
+    {% endfor %}
 </body>
 </html>
