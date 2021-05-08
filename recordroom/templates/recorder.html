@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recording Room</title>
+</head>
+<body>
+    <script src="{% static 'js/csrf.js' %}"></script>
+    <button id="record" >record</button><br>
+    <button id="stop" >stop</button><br>
+    <button id="play" >play</button><br>
+    <textarea name="title" id="title" cols="30" rows="10"></textarea><br>
+    <button id="save">save</button><br>
+    <script src="{% static 'js/recorder.js' %}"></script>
+</body>
+</html>
