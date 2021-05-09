@@ -9,6 +9,8 @@
 <body>
     <a href="{% url 'logout' %}">logout</a><br>
     <a href="{% url 'addclass' %}">add class</a><br>
+    <a href="{% url 'recordroom' %}">Recording Room</a><br>
+    <a href="{% url 'recordings' %}">Recording Collection</a><br>
 
     <h1>classes</h1>
     {% for class in classes %}
