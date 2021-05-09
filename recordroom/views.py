@@ -17,3 +17,10 @@ def recordroom(request):
     
 
     return render(request,'recorder.html',{})
+
+def recordings(request):
+    data = recording.objects.filter(user = request.user)
+    context = {
+        'recording':data,
+    }
+    return render(request,'recording.html',context)
