@@ -9,7 +9,8 @@
 </head>
 <body>
     <script src="{% static 'js/csrf.js' %}"></script>
-    <button id="record" >record</button><br>
+    <div id="stopwatch">00:00:00</div>
+    <button id="record" onclick="startTimer()">record</button><br>
     <button id="stop" >stop</button><br>
     <button id="play" >play</button><br>
     <textarea name="title" id="title" cols="30" rows="10"></textarea><br>
