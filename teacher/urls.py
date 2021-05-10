@@ -7,4 +7,6 @@ urlpatterns = [
     path('dashboard/',views.dashboard, name = 'dashboard'),
     path('addclass/',views.addclass,name='addclass'),
     path('classroom/<int:classid>/',views.Classroom, name='classroom'),
+    path('classroom/<int:classid>/addstudent/',views.addstudent, name='addstudent'),
+    path('classroom/<int:classid>/sendrecording/',views.sendrecording, name='sendrecording'),
 ]

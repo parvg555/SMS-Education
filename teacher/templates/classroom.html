@@ -1,1 +1,21 @@
-//classroom
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassRoom</title>
+</head>
+<body>
+    <a href="{% url 'addstudent' classid %}"> add student </a><br>
+    <a href="{% url 'sendrecording' classid %}">Send Recording</a>
+    <h2>Students</h2>
+    {% for i in students %}
+        <div>
+            <strong>Name: </strong>{{i.name}}<br>
+            <strong>Contact Number: </strong>{{i.phone}}<br>
+            <br>
+        </div>
+    {% endfor %}
+</body>
+</html>
