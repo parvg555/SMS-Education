@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'login',
     'teacher',
     'recordroom',
+    'background_task',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+BACKGROUND_TASK_RUN_ASYNC = True

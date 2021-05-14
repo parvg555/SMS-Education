@@ -22,3 +22,4 @@ class student(models.Model):
         return self.name
 
 
+

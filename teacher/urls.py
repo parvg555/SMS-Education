@@ -10,3 +10,4 @@ urlpatterns = [
     path('classroom/<int:classid>/addstudent/',views.addstudent, name='addstudent'),
     path('classroom/<int:classid>/sendrecording/',views.sendrecording, name='sendrecording'),
 ]
+

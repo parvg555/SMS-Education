@@ -3,7 +3,40 @@ from django.contrib.auth.forms import UserCreationForm
 from .forms import *
 from .models import *
 from recordroom.models import *
+from background_task import background
+import imaplib
+import email
 # Create your views here.
+
+
+
+@background(schedule = 30)
+def mailchecker():
+    host = 'imap.gmail.com'
+    username = 'smsedu.receive@gmail.com'
+    password = 'Sms@edu1234'
+    mail = imaplib.IMAP4_SSL(host)
+    mail.login(username,password)
+    mail.select("inbox")
+    _,search_data = mail.search(None,'UNSEEN')
+    for num in search_data[0].split():
+        _,data = mail.fetch(num , '(RFC822)')
+        _,b = data[0]
+        email_message = email.message_from_bytes(b)
+        for part in email_message.walk():
+            if part.get_content_type() == "text/plain" or part.get_content_type() =="text/html":
+                body = part.get_payload(decode = True)
+                print(body)
+                body = str(body)
+                body = body.split()
+                if body[0] == 'b\'DOUBT':
+                    print('DOUBT')
+                elif body[0] == 'b\'ANSWER':
+                    print('ANSWER')
+                else:
+                    print('EXCEPTION')
+
+
 
 def dashboard(request):
     if not request.user.is_authenticated:
