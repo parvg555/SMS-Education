@@ -110,3 +110,13 @@ def sendrecording(request,classid):
         'recordings':recordings,
     }
     return render(request,'sendrecording.html',context)
+
+
+def doubt(request,classid):
+    pass
+
+def question(request,classid):
+    pass
+
+def report(request, classid, questionid):
+    pass
