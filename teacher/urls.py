@@ -9,5 +9,8 @@ urlpatterns = [
     path('classroom/<int:classid>/',views.Classroom, name='classroom'),
     path('classroom/<int:classid>/addstudent/',views.addstudent, name='addstudent'),
     path('classroom/<int:classid>/sendrecording/',views.sendrecording, name='sendrecording'),
+    path('classroom/<int:classid>/question/',views.ques, name='question'),
+    path('classroom/<int:classid>/askques/',views.askques,name='askques'),
+
 ]
 

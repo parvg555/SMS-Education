@@ -115,8 +115,36 @@ def sendrecording(request,classid):
 def doubt(request,classid):
     pass
 
-def question(request,classid):
-    pass
+
+def ques(request,classid):
+    if not request.user.is_authenticated:
+        return redirect('index')
+    c = classroom.objects.get(pk = classid)
+    ques = question.objects.filter(classroom = c)
+    context = {
+        'questions':ques,
+        'classid':classid,
+    }
+    return render(request,'questions.html',context)
+
+def askques(request,classid):
+    if not request.user.is_authenticated:
+        return redirect('index')
+    c = classroom.objects.get(pk = classid)
+    
+    if request.method == 'POST':
+        q = request.POST.get('question')
+        o1 = request.POST.get('option1')
+        o2 = request.POST.get('option2')
+        o3 = request.POST.get('option3')
+        o4 = request.POST.get('option4')
+        correct = request.POST.get('correct')
+        ques = question(classroom = c, question = q, option1 = o1, option2 = o2, option3 = o3, option4 = o4, correct = correct)
+        ques.save()
+        #add send mail function
+        return redirect('question',classid = classid)
+    
+    return render(request,'askques.html',{})
 
 def report(request, classid, questionid):
     pass

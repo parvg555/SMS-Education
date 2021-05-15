@@ -21,7 +21,7 @@ class student(models.Model):
     def __str__(self):
         return self.name
 
-class question(model.Model):
+class question(models.Model):
     classroom = models.ForeignKey(classroom,null=False,blank=False,on_delete=models.CASCADE)
     question = models.CharField(max_length = 200, null=False, blank = False)
     option1 = models.CharField(max_length = 50, null=False, blank = False)
@@ -33,7 +33,7 @@ class question(model.Model):
     def __str__(self):
         return self.question
 
-class doubt(model.Model):
+class doubt(models.Model):
     classroom = models.ForeignKey(classroom, null = False, blank = False, on_delete = models.CASCADE)
     student = models.ForeignKey(student, null=False, blank = False, on_delete = models.CASCADE)
     question = models.CharField(max_length = 200, null=False, blank = False)
@@ -44,11 +44,11 @@ class doubt(model.Model):
         return self.question
 
 
-class answer(model.Model):
+class answer(models.Model):
     question = models.ForeignKey(question, null = False, blank = False,  on_delete = models.CASCADE)
     student = models.ForeignKey(student, null=False, blank = False, on_delete = models.CASCADE)
     answer = models.CharField(max_length = 10, null=False, blank = False)
-
+    correct = models.BooleanField(default = False)
     def __str__(self):
         return self.answer
     

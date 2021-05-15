@@ -8,7 +8,9 @@
 </head>
 <body>
     <a href="{% url 'addstudent' classid %}"> add student </a><br>
-    <a href="{% url 'sendrecording' classid %}">Send Recording</a>
+    <a href="{% url 'sendrecording' classid %}">Send Recording</a><br>
+    <a href="{% url 'question' classid %}">Asked Questions</a><br>
+    <a href="{% url 'askques' classid %}">Ask a Question</a><br>
     <h2>Students</h2>
     {% for i in students %}
         <div>

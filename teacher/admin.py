@@ -4,3 +4,6 @@ from .models import *
 
 admin.site.register(classroom)
 admin.site.register(student)
+admin.site.register(question)
+admin.site.register(doubt)
+admin.site.register(answer)
