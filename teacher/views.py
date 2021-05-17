@@ -112,9 +112,38 @@ def sendrecording(request,classid):
     return render(request,'sendrecording.html',context)
 
 
-def doubt(request,classid):
+def doubts(request,classid):
+    if not request.user.is_authenticated:
+        return redirect('index')
+    c = classroom.objects.get(pk=classid)
+    d = doubt.objects.filter(classroom = c,answered = False)
+    context = {
+        'doubts':d,
+        'classid':classid,
+    }
+    return render(request,'doubts.html',context)
     pass
 
+
+def resolve(request, classid, doubtid):
+    if not request.user.is_authenticated:
+        return request('index')
+    c = classroom.objects.get(pk = classid)
+    d = doubt.objects.get(pk = doubtid)
+    if request.method == 'POST':
+        ans = request.POST.get('answer')
+        ph = d.student.phone
+        d.answered = True
+        d.answer = ans
+        #send ans
+        d.save()
+        return redirect('doubts',classid = classid)
+    context = {
+        'doubt':d,
+        'classid':classid,
+    }
+    return render(request,'resolve.html',context)
+    pass
 
 def ques(request,classid):
     if not request.user.is_authenticated:

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doubts</title>
+</head>
+<body>
+    <h2>DOUBTS</h2>
+    {% for doubt in doubts %}
+        <b>Question:</b>
+        {{doubt.question}}
+        <br>
+        <a href="{% url 'resolve' classid doubt.id %}">Resolve Doubt</a>
+    {% endfor %}
+</body>
+</html>

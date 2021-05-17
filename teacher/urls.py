@@ -11,6 +11,7 @@ urlpatterns = [
     path('classroom/<int:classid>/sendrecording/',views.sendrecording, name='sendrecording'),
     path('classroom/<int:classid>/question/',views.ques, name='question'),
     path('classroom/<int:classid>/askques/',views.askques,name='askques'),
-
+    path('classroom/<int:classid>/doubts',views.doubts,name='doubts'),
+    path('classroom/<int:classid>/resolve/<int:doubtid>/',views.resolve,name='resolve'),
 ]
 
