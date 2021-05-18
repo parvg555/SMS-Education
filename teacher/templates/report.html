@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassRoom</title>
+</head>
+<body>
+    <h5>correct: {{correct_count}}</h5>
+    <h5>a: {{a}}</h5>
+    <h5>b: {{b}}</h5>
+    <h5>c: {{c}}</h5>
+    <h5>d: {{d}}</h5>
+    <br>
+    <h2>Correct ans by</h2>
+    {% for i in students %}
+        <div>
+            <strong>Name: </strong>{{i.name}}<br>
+            <br>
+        </div>
+    {% endfor %}
+</body>
+</html>

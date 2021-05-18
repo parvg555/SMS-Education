@@ -13,35 +13,6 @@ from email.mime.base import MIMEBase
 from email import encoders
 # Create your views here.
 
-
-
-@background(schedule = 30)
-def mailchecker():
-    host = 'imap.gmail.com'
-    username = 'smsedu.receive@gmail.com'
-    password = 'Sms@edu1234'
-    mail = imaplib.IMAP4_SSL(host)
-    mail.login(username,password)
-    mail.select("inbox")
-    _,search_data = mail.search(None,'UNSEEN')
-    for num in search_data[0].split():
-        _,data = mail.fetch(num , '(RFC822)')
-        _,b = data[0]
-        email_message = email.message_from_bytes(b)
-        for part in email_message.walk():
-            if part.get_content_type() == "text/plain" or part.get_content_type() =="text/html":
-                body = part.get_payload(decode = True)
-                print(body)
-                body = str(body)
-                body = body.split()
-                if body[0] == 'b\'DOUBT':
-                    print('DOUBT')
-                elif body[0] == 'b\'ANSWER':
-                    print('ANSWER')
-                else:
-                    print('EXCEPTION')
-
-
 def sendmessage(phone, message, attach = ''):
     print(attach)
     fromaddr = 'smsedu.receive@gmail.com'
@@ -66,6 +37,76 @@ def sendmessage(phone, message, attach = ''):
     s.sendmail(fromaddr,'parvg1234@gmail.com',text)
     s.quit()
     return
+
+
+@background(schedule = 30)
+def mailchecker():
+    host = 'imap.gmail.com'
+    username = 'smsedu.receive@gmail.com'
+    password = 'Sms@edu1234'
+    mail = imaplib.IMAP4_SSL(host)
+    mail.login(username,password)
+    mail.select("inbox")
+    _,search_data = mail.search(None,'UNSEEN')
+    for num in search_data[0].split():
+        _,data = mail.fetch(num , '(RFC822)')
+        raw_email = data[0][1]
+        raw_email_string = raw_email.decode('utf-8')
+        email_message = email.message_from_string(raw_email_string)
+        email_subject = str(email.header.make_header(email.header.decode_header(email_message['Subject'])))
+        print("subject:")
+        print(email_subject)
+        phone = email_subject
+        mess = ""
+        if email_message.is_multipart():
+            for payload in email_message.get_payload():
+                mess = payload.get_payload()
+                print(mess)
+                break
+        else:
+            mess = email_message.get_payload()
+            print(mess)
+        print("\n\n\n--------------------- \n\n\n")
+        data = mess
+        data = str(data)
+        print(data)
+        data_raw = str(data)
+        data = data.split()
+        s = student.objects.filter(phone = int(phone)).first()
+        if not s:
+            print('here')
+            sendmessage(phone,"phone not registered")
+            return 
+        if data[0] == 'ANSWER':
+            print('ANSWER')
+            q = question.objects.get(pk = int(data[1]))
+            if q:
+                print("got it")
+                if data[2] == 'a' or data[2]=='b' or data[2]=='c' or data[2]=='d':
+                    check = False
+                    if(data[2] == q.correct):
+                        check = True
+                        sendmessage(phone,"Correct Answer!")
+                    if check == False:
+                        sendmessage(phone, "Wrong ans \n correct answer: "+str(q.correct)+"\n")
+                    ans = answer(question = q,student = s, answer = data[2], correct = check)
+                    ans.save()
+                else:
+                    sendmessage(phone,"wrong format")  
+            else:
+                sendmessage(phone,"wring question id")
+                print('exception...')
+        elif data[0] == 'DOUBT':
+            print('DOUBT')
+            c = classroom.objects.get(pk = int(data[1]))
+            if c:
+                d = doubt(classroom = c, student = s, question = data_raw)
+                d.save()
+            else:
+                sendmessage(phone,"classroom not found")
+        else:
+            sendmessage(phone,"WRONG FORMAT!")
+
 
 
 def dashboard(request):
@@ -217,5 +258,35 @@ def report(request, classid, questionid):
         return redirect('index')
     
     q = question.objects.get(pk = questionid)
-    ans = answer.objects.get(question = q)
-    pass
+    ans = answer.objects.filter(question = q).first()
+
+    if not ans:
+        context = {
+        'a':0,
+        'b':0,
+        'c':0,
+        'd':0,
+        'correct_count':0,
+        'students':{},
+        }
+        return render(request,'report.html',context)
+
+    correct = answer.objects.filter(question = q,correct = True)
+    students = []
+    for c in correct:
+        students.append(c.student)
+    correct_count = answer.objects.filter(question = q,correct = True).count()
+    a = answer.objects.filter(question = q, answer="a").count()
+    b = answer.objects.filter(question = q, answer="b").count()
+    c = answer.objects.filter(question = q, answer="c").count()
+    d = answer.objects.filter(question = q, answer="d").count()
+
+    context = {
+        'a':a,
+        'b':b,
+        'c':c,
+        'd':d,
+        'correct_count':correct_count,
+        'students':students,
+    }
+    return render(request,'report.html',context)

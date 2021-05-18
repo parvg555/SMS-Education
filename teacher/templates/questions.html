@@ -19,6 +19,7 @@
             <li>{{ques.option4}}</li>
         </ul>
         <b>Correct Answer: </b>{{ques.correct}}<br>
+        <a href="{% url 'report' classid ques.id %}">Report</a>
     {% endfor %}
 </body>
 </html>

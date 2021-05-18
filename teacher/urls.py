@@ -13,5 +13,6 @@ urlpatterns = [
     path('classroom/<int:classid>/askques/',views.askques,name='askques'),
     path('classroom/<int:classid>/doubts',views.doubts,name='doubts'),
     path('classroom/<int:classid>/resolve/<int:doubtid>/',views.resolve,name='resolve'),
+    path('classroom/<int:classid>/report/<int:questionid>/',views.report,name='report'),
 ]
 
