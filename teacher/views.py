@@ -202,7 +202,12 @@ def askques(request,classid):
         correct = request.POST.get('correct')
         ques = question(classroom = c, question = q, option1 = o1, option2 = o2, option3 = o3, option4 = o4, correct = correct)
         ques.save()
-        #add send mail function
+        qid = question.objects.latest('id')
+        instruction = "\n\n You can answer this question by typing ANSWER <question id> <option a/b/c/d>"
+        stu = student.objects.filter(classroom = c)
+        mes = "Question id:"+ str(qid.id) +"\n\n"+ str(q) +"\na - "+str(o1)+"\nb - "+str(o2) +"\nc - "+str(o3)+"\nd - "+str(o4)+"\n"+ instruction 
+        for s in stu:
+            sendmessage(s.phone,mes) 
         return redirect('question',classid = classid)
     
     return render(request,'askques.html',{})
@@ -213,5 +218,4 @@ def report(request, classid, questionid):
     
     q = question.objects.get(pk = questionid)
     ans = answer.objects.get(question = q)
-    
     pass
