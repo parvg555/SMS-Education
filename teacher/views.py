@@ -6,6 +6,11 @@ from recordroom.models import *
 from background_task import background
 import imaplib
 import email
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
 # Create your views here.
 
 
@@ -36,6 +41,31 @@ def mailchecker():
                 else:
                     print('EXCEPTION')
 
+
+def sendmessage(phone, message, attach = ''):
+    print(attach)
+    fromaddr = 'smsedu.receive@gmail.com'
+    msg = MIMEMultipart()
+    msg['From'] = fromaddr
+    msg['To'] = 'parvg1234@gmail.com'
+    msg['Subject'] = str(phone)
+    body = message
+    msg.attach(MIMEText(body, 'plain'))
+    if(attach != ''):
+        p = "a"
+        attachment = open(os.path.join(settings.MEDIA_ROOT, f'{attach}'),"rb")
+        p = MIMEBase('application','octet-stream')
+        p.set_payload((attachment).read())
+        encoders.encode_base64(p)
+        p.add_header('Content-Disposition',"attachment; filename=%s" % attach)
+        msg.attach(p)
+    s = smtplib.SMTP('smtp.gmail.com',587)
+    s.starttls()
+    s.login(fromaddr,'Sms@edu1234')
+    text = msg.as_string()
+    s.sendmail(fromaddr,'parvg1234@gmail.com',text)
+    s.quit()
+    return
 
 
 def dashboard(request):
@@ -86,7 +116,8 @@ def addstudent(request,classid):
         c = classroom.objects.get(pk = classid)
         s = student(classroom = c,name = name,phone = phone)
         s.save()
-        #have to add welcome message
+        message = "Hello " + str(name) + ", You have been added to "+str(c.subject)+" classroom with code: "+str(c.id)+".\n in case of doubt type in DOUBT <classroom code> <your message> and send to this number."
+        sendmessage(phone,message,"")
         return redirect('classroom', classid = classid)
         
     return render(request,'addstudent.html',{})
@@ -101,6 +132,7 @@ def sendrecording(request,classid):
         r = recording.objects.get(pk = recording_id)
         students = student.objects.filter(classroom = c)
         for i in students:
+            sendmessage(i.phone,"SEND",r.title+".wav")
             print(i.phone,r.title) #have to replace with email function
         return redirect('classroom',classid=classid)
 
@@ -135,7 +167,7 @@ def resolve(request, classid, doubtid):
         ph = d.student.phone
         d.answered = True
         d.answer = ans
-        #send ans
+        sendmessage(ph,ans)
         d.save()
         return redirect('doubts',classid = classid)
     context = {
@@ -176,4 +208,10 @@ def askques(request,classid):
     return render(request,'askques.html',{})
 
 def report(request, classid, questionid):
+    if not request.user.is_authenticated:
+        return redirect('index')
+    
+    q = question.objects.get(pk = questionid)
+    ans = answer.objects.get(question = q)
+    
     pass
