@@ -32,7 +32,7 @@ def sendmessage(phone, message, attach = ''):
         msg.attach(p)
     s = smtplib.SMTP('smtp.gmail.com',587)
     s.starttls()
-    s.login(fromaddr,'Sms@edu1234')
+    s.login(fromaddr,'yourpass')
     text = msg.as_string()
     s.sendmail(fromaddr,'parvg1234@gmail.com',text)
     s.quit()
